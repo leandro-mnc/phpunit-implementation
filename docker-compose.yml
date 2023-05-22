@@ -1,0 +1,51 @@
+services:
+
+  php:
+    build:
+      context: .
+      dockerfile: Docker/Php/Dockerfile
+    depends_on:
+      - db
+    container_name: phpunit-php-apache
+    ports:
+      - 80:80
+    volumes:
+      - ./Docker/Php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./Docker/Php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - .:/var/www/html
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - phpunit
+
+  db:
+    build:
+      context: .
+      dockerfile: Docker/MySQL/Dockerfile
+    container_name: phpunit-database
+    volumes:
+      - mysql-db-storage:/var/lib/mysql
+    ports:
+      - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    networks:
+      - phpunit
+
+networks:
+  phpunit:
+    driver: bridge
+
+volumes:
+  mysql-db-storage:

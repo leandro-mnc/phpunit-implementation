@@ -1,0 +1,28 @@
+{
+  "name": "lteixeiramnc/phpunit-estudos",
+  "description": "Phpunit Estudos",
+  "authors": [
+    {
+      "name": "Leandro Teixeira",
+      "email": "lteixeiramnc@yahoo.com"
+    }
+  ],
+  "scripts": {
+    "tests": "phpunit tests"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=8.0",
+    "ext-pdo": "*",
+    "robmorgan/phinx": "^0.13.4",
+    "ext-xdebug": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.1"
+  }
+}
