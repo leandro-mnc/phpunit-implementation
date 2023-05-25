@@ -41,14 +41,14 @@ class UserModel
         $fields = ['name', 'email'];
         $args[':id'] = $data['id'];
         $set = [];
-        foreach ($data as $key => $row) {
-            if (array_key_exists($key, $fields) === true) {
-                $set[$key] = ':' . $key;
-                $args[':' . $key] = $row;
+        foreach ($fields as $key) {
+            if (array_key_exists($key, $data) === true) {
+                $set[] = $key . ' = :' . $key;
+                $args[':' . $key] = $data[$key];
             }
         }
 
-        $query = "UPDATE user SET " . implode(',', $set) . " WHERE id = :id";
+        $query = "UPDATE user SET " . implode(', ', $set) . " WHERE id = :id";
 
         return $this->database->execute($query, $args) > 0;
     }
@@ -71,9 +71,6 @@ class UserModel
 
         $result = $this->database->execute($query, $args);
 
-        if ($result < 1) {
-            return 0;
-        }
         return $this->database->lastInsertId();
     }
 }

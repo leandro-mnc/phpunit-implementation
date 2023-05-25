@@ -30,6 +30,46 @@ final class UserTest extends TestCase
     }
 
     /**
+     * @throws AlreadyExistsException
+     * @throws DatabaseException
+     */
+    public function testUserCreateError()
+    {
+        $database = $this->getDatabase();
+
+        $model = new UserModel($database);
+
+        $service = new CreateService($model);
+
+        $user = ['name' => 'Michael'];
+
+        $this->assertFalse($service->create($user) > 0);
+    }
+
+    /**
+     * @throws DatabaseException
+     */
+    public function testUserCreateEmailExists()
+    {
+        $database = $this->getDatabase();
+
+        $model = new UserModel($database);
+
+        $service = new CreateService($model);
+
+        $users = self::dataProvider();
+
+        $user = $users[0][0];
+
+        try {
+            $service->create($user);
+            $this->fail();
+        } catch (AlreadyExistsException $ex) {
+            $this->assertTrue(true);
+        }
+    }
+
+    /**
      * @
      * @return \App\Database\DatabaseInterface
      * @throws DatabaseException

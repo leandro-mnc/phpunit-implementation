@@ -8,7 +8,7 @@
     }
   ],
   "scripts": {
-    "tests": "phpunit tests"
+    "tests": "phpunit --coverage-html coverage tests"
   },
   "autoload": {
     "psr-4": {
